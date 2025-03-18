@@ -1,4 +1,5 @@
 using GestorFinanzasMVC.Models;
+using GestorFinanzasMVC.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,9 @@ builder.Services.AddControllersWithViews();
 // Configurar DbContext con la cadena de conexión
 builder.Services.AddDbContext<GestorFinanzasDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Servicio Email
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 

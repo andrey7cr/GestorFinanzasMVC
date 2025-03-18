@@ -14,3 +14,5 @@ CREATE TABLE Usuarios (
     FechaRegistro DATETIME DEFAULT GETDATE()
 );
 GO
+
+

@@ -24,37 +24,56 @@
 
 @section Scripts {
     <script>
-        document.getElementById("registroForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
+                document.getElementById("registroForm").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Evita que el formulario se envíe de la manera tradicional
+
+            // Recopila los datos del formulario
             const data = {
                 Nombre: document.getElementById("Nombre").value,
                 Email: document.getElementById("Email").value,
                 Password: document.getElementById("Password").value
             };
-            const response = await fetch('/api/Usuarios/Registrar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            const mensajeDiv = document.getElementById("mensaje");
-                   if (response.ok) {
-            mensajeDiv.innerHTML = `
-                <div class="alert alert-success">
-                    <strong>¡Registro exitoso!</strong> ${result.message}
-                </div>`;
-            setTimeout(() => {
-                window.location.href = "/Account/Login";
-            }, 2000);
-        } else {
-            mensajeDiv.innerHTML = `
-                <div class="alert alert-danger">
-                    <strong>Error:</strong> ${result.message || 'Error en el registro.'}
-                </div>`;
-        }
 
+            try {
+                // Envía la solicitud POST al backend
+                const response = await fetch('/api/Usuarios/Registrar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Procesa la respuesta
+                const result = await response.json();
+                const mensajeDiv = document.getElementById("mensaje");
+
+                if (response.ok) {
+                    // Muestra un mensaje de éxito
+                    mensajeDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>¡Registro exitoso!</strong> ${result.message}
+                        </div>`;
+                    // Redirige al usuario a la página de login después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = "/Account/Login";
+                    }, 2000);
+                } else {
+                    // Muestra un mensaje de error
+                    mensajeDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Error:</strong> ${result.message || 'Error en el registro.'}
+                        </div>`;
+                }
+            } catch (error) {
+                // Maneja errores de red o del servidor
+                console.error("Error al enviar la solicitud:", error);
+                const mensajeDiv = document.getElementById("mensaje");
+                mensajeDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> No se pudo conectar con el servidor.
+                    </div>`;
+            }
         });
     </script>
 }

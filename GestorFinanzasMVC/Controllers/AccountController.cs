@@ -13,5 +13,16 @@ namespace GestorFinanzasMVC.Controllers
         {
             return View(); // Buscará la vista en Views/Account/Register.cshtml
         }
+
+        public IActionResult RecuperarPassword()
+        {
+            return View(); // Buscará la vista en Views/Account/RecuperarPassword.cshtml
+        }
+
+        public IActionResult ResetearPassword(string token)
+        {
+            ViewBag.Token = token;
+            return View(); // Buscará la vista en Views/Account/ResetearPassword.cshtml
+        }
     }
 }
