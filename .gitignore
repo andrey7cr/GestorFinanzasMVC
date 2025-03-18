@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Excluir appsettings.Development.json
-appsettings.Development.json
+GestorFinanzasMVC/appsettings.Development.json
