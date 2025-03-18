@@ -20,14 +20,14 @@ namespace GestorFinanzasMVC.Services
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("Gestor Finanzas", "correo@gmail.com"));
+            emailMessage.From.Add(new MailboxAddress("Gestor Finanzas", _emailUser));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = message };
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                await client.ConnectAsync("smtp.ucr.ac.cr", 587, SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(_emailUser, _emailPassword);
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);
