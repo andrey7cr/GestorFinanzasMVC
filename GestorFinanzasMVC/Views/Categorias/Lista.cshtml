@@ -1,25 +1,33 @@
 ﻿@model IEnumerable<GestorFinanzasMVC.Models.Categoria>
+
 @{
     ViewData["Title"] = "Lista de Categorías";
 }
 
-<div class="container py-4">
-    <h2 class="text-center mb-4">Lista de Categorías</h2>
+<h2 class="text-center mb-4">Lista de Categorías</h2>
 
-    <ul class="list-group">
-        @foreach (var categoria in Model)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@categoria.Nombre</span>
-                <button class="btn btn-sm btn-outline-danger" onclick="eliminarCategoria(@categoria.CategoriaId)">
-                    <i class="bi bi-trash"></i> Eliminar
-                </button>
-            </li>
-        }
-    </ul>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Categorías Registradas</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var categoria in Model)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>@categoria.Nombre</span>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarCategoria(@categoria.CategoriaId)">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
 
-<!-- Toast -->
+<!-- Toast de éxito -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
     <div id="toastCategoria" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
@@ -44,7 +52,6 @@
                 const toast = new bootstrap.Toast(document.getElementById("toastCategoria"), { delay: 2000 });
                 toast.show();
 
-                // Refrescar después de mostrar el toast
                 setTimeout(() => location.reload(), 2200);
             } else {
                 alert("Error al eliminar la categoría.");

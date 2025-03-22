@@ -45,5 +45,25 @@ namespace GestorFinanzasMVC.Controllers
             return View("Resumen", ((IEnumerable<Ingreso>)ingresos, (IEnumerable<Gasto>)gastos));
 
         }
+
+        [Authorize]
+        public async Task<IActionResult> Grafico()
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var ingresos = await _context.Ingresos
+                .Where(i => i.UsuarioId == usuarioId)
+                .SumAsync(i => i.Monto);
+
+            var gastos = await _context.Gastos
+                .Where(g => g.UsuarioId == usuarioId)
+                .SumAsync(g => g.Monto);
+
+            ViewBag.TotalIngresos = ingresos;
+            ViewBag.TotalGastos = gastos;
+
+            return View();
+        }
+
     }
 }

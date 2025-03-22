@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Gráfico de Ingresos vs Gastos";
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4 text-primary">Resumen Gráfico</h2>
+
+    <div class="d-flex justify-content-center">
+        <canvas id="graficoFinanciero" style="max-width: 400px; max-height: 300px;"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('graficoFinanciero').getContext('2d');
+        const grafico = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ingresos', 'Gastos'],
+                datasets: [{
+                    label: 'Monto en colones',
+                    data: [@ViewBag.TotalIngresos, @ViewBag.TotalGastos],
+                    backgroundColor: ['#198754', '#dc3545'],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5000 // ajustable
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+}
