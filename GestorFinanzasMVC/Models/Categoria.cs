@@ -5,15 +5,15 @@ namespace GestorFinanzasMVC.Models
 {
     public class Categoria
     {
-        [Key] // Marca esta propiedad como clave primaria
+        [Key] 
         public int CategoriaId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El nombre es obligatorio")]
         [StringLength(100)]
         public string Nombre { get; set; }
 
         // Relaciones
-        public ICollection<Ingreso> Ingresos { get; set; }
-        public ICollection<Gasto> Gastos { get; set; }
+        public ICollection<Ingreso>? Ingresos { get; set; }
+        public ICollection<Gasto>? Gastos { get; set; }
     }
 }

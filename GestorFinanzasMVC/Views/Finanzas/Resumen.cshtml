@@ -53,3 +53,36 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        async function eliminarIngreso(id) {
+            if (confirm("¿Estás seguro de eliminar este ingreso?")) {
+                const res = await fetch(`/api/Ingresos/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert("Error al eliminar el ingreso");
+                }
+            }
+        }
+
+        async function eliminarGasto(id) {
+            if (confirm("¿Estás seguro de eliminar este gasto?")) {
+                const res = await fetch(`/api/Gastos/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert("Error al eliminar el gasto");
+                }
+            }
+        }
+    </script>
+}

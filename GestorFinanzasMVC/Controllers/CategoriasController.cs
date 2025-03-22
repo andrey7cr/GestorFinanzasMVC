@@ -1,13 +1,11 @@
 ﻿using GestorFinanzasMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace GestorFinanzasMVC.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CategoriasController : ControllerBase
+    public class CategoriasController : Controller
     {
         private readonly GestorFinanzasDbContext _context;
 
@@ -16,16 +14,22 @@ namespace GestorFinanzasMVC.Controllers
             _context = context;
         }
 
-        // GET: api/Categorias
+        [Authorize]
         [HttpGet]
+        public IActionResult Crear()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Route("api/Categorias")]
         public async Task<IActionResult> GetCategorias()
         {
             var categorias = await _context.Categorias.ToListAsync();
             return Ok(categorias);
         }
 
-        // GET: api/Categorias/5
-        [HttpGet("{id}")]
+        [HttpGet("api/Categorias/{id}")]
         public async Task<IActionResult> GetCategoria(int id)
         {
             var categoria = await _context.Categorias.FindAsync(id);
@@ -36,13 +40,13 @@ namespace GestorFinanzasMVC.Controllers
             return Ok(categoria);
         }
 
-        // POST: api/Categorias
-        [HttpPost]
+        [HttpPost("api/Categorias")]
         public async Task<IActionResult> PostCategoria([FromBody] Categoria categoria)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errores = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { mensaje = "Error de validación", errores });
             }
 
             _context.Categorias.Add(categoria);
@@ -51,8 +55,9 @@ namespace GestorFinanzasMVC.Controllers
             return CreatedAtAction(nameof(GetCategoria), new { id = categoria.CategoriaId }, categoria);
         }
 
-        // PUT: api/Categorias/5
-        [HttpPut("{id}")]
+
+       
+        [HttpPut("api/Categorias/{id}")]
         public async Task<IActionResult> PutCategoria(int id, [FromBody] Categoria categoria)
         {
             if (id != categoria.CategoriaId)
@@ -66,8 +71,7 @@ namespace GestorFinanzasMVC.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Categorias/5
-        [HttpDelete("{id}")]
+        [HttpDelete("api/Categorias/{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)
         {
             var categoria = await _context.Categorias.FindAsync(id);
@@ -81,5 +85,14 @@ namespace GestorFinanzasMVC.Controllers
 
             return NoContent();
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Lista()
+        {
+            var categorias = await _context.Categorias.ToListAsync();
+            return View(categorias);
+        }
+
     }
 }
