@@ -17,9 +17,15 @@
                 {
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>@ingreso.Descripcion</span>
-                        <span><strong>₡@ingreso.Monto</strong></span>
+                        <span>
+                            <strong>₡@ingreso.Monto</strong>
+                            <button class="btn btn-sm btn-outline-danger ms-2" onclick="eliminarIngreso(@ingreso.IngresoId)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </span>
                     </li>
                 }
+
             </ul>
         </div>
     </div>
@@ -34,9 +40,15 @@
                 {
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>@gasto.Descripcion</span>
-                        <span><strong>₡@gasto.Monto</strong></span>
+                        <span>
+                            <strong>₡@gasto.Monto</strong>
+                            <button class="btn btn-sm btn-outline-danger ms-2" onclick="eliminarGasto(@gasto.GastoId)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </span>
                     </li>
                 }
+
             </ul>
         </div>
     </div>

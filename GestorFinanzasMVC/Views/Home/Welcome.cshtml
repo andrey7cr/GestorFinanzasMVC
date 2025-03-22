@@ -2,21 +2,6 @@
     ViewData["Title"] = "Bienvenido";
 }
 
-<div class="container mt-5">
-    <h2>Bienvenido, @ViewBag.NombreUsuario</h2>
-    <p>Has iniciado sesión exitosamente en GestorFinanzasMVC.</p>
-    <p>Aquí podrás gestionar tus finanzas y ver tus reportes.</p>
-    <a href="/Finanzas/Registrar">Registrar Ingreso</a> |
-    <a href="/Finanzas/Registrar">Registrar Gasto</a>
-    <button onclick="cerrarSesion()">Cerrar sesión</button>
-
-   
-</div>
-
-@{
-    ViewData["Title"] = "Bienvenido";
-}
-
 <div class="container py-5">
     <h2 class="text-center mb-5">¡Bienvenido, @User.Identity.Name!</h2>
 
