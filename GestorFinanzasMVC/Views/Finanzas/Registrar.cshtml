@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Registrar Ingreso o Gasto";
+}
+
+<h2>Registrar Ingreso o Gasto</h2>
+
+<form id="registroFinanzaForm">
+    <div class="form-group">
+        <label for="Tipo">Tipo:</label>
+        <select id="Tipo" name="Tipo" class="form-control" required>
+            <option value="Ingreso">Ingreso</option>
+            <option value="Gasto">Gasto</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Descripcion">Descripción:</label>
+        <input type="text" id="Descripcion" name="Descripcion" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="Monto">Monto:</label>
+        <input type="number" id="Monto" name="Monto" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="CategoriaId">Categoría:</label>
+        <select id="CategoriaId" name="CategoriaId" class="form-control" required>
+            <!-- Se llenan desde la BD con JS -->
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
+
+@section Scripts {
+    <script>
+            document.getElementById("registroFinanzaForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const tipo = document.getElementById("Tipo").value;
+            const data = {
+                Descripcion: document.getElementById("Descripcion").value,
+                Monto: parseFloat(document.getElementById("Monto").value),
+                CategoriaId: parseInt(document.getElementById("CategoriaId").value),
+                Fecha: new Date().toISOString() // por si el backend espera también fecha
+            };
+
+            let endpoint = '';
+            if (tipo === "Ingreso") {
+                endpoint = '/api/Ingresos';
+            } else if (tipo === "Gasto") {
+                endpoint = '/api/Gastos';
+            }
+            console.log("Datos enviados:", JSON.stringify(data, null, 2));
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', 
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert(`${tipo} registrado con éxito`);
+                window.location.href = "/Finanzas";
+            } else {
+                alert(`Error al registrar el ${tipo}`);
+            }
+        });
+
+        // Llenar el dropdown de categorías
+        async function cargarCategorias() {
+            const response = await fetch('/api/Categorias');
+            const categorias = await response.json();
+            const select = document.getElementById("CategoriaId");
+
+            categorias.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria.categoriaId;
+                option.text = categoria.nombre;
+                select.add(option);
+            });
+        }
+
+        cargarCategorias();
+    </script>
+}

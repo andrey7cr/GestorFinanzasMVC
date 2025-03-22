@@ -4,6 +4,7 @@ using GestorFinanzasMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestorFinanzasMVC.Migrations
 {
     [DbContext(typeof(GestorFinanzasDbContext))]
-    partial class GestorFinanzasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318230101_AddIngresosGastosCategorias2")]
+    partial class AddIngresosGastosCategorias2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,14 +65,9 @@ namespace GestorFinanzasMVC.Migrations
                     b.Property<decimal>("Monto")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("GastoId");
 
                     b.HasIndex("CategoriaId");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Gastos");
                 });
@@ -96,14 +94,9 @@ namespace GestorFinanzasMVC.Migrations
                     b.Property<decimal>("Monto")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("IngresoId");
 
                     b.HasIndex("CategoriaId");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Ingresos");
                 });
@@ -153,15 +146,7 @@ namespace GestorFinanzasMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GestorFinanzasMVC.Models.Usuario", "Usuario")
-                        .WithMany("Gastos")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Categoria");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("GestorFinanzasMVC.Models.Ingreso", b =>
@@ -172,25 +157,10 @@ namespace GestorFinanzasMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GestorFinanzasMVC.Models.Usuario", "Usuario")
-                        .WithMany("Ingresos")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Categoria");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("GestorFinanzasMVC.Models.Categoria", b =>
-                {
-                    b.Navigation("Gastos");
-
-                    b.Navigation("Ingresos");
-                });
-
-            modelBuilder.Entity("GestorFinanzasMVC.Models.Usuario", b =>
                 {
                     b.Navigation("Gastos");
 

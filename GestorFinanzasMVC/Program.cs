@@ -14,6 +14,13 @@ builder.Services.AddDbContext<GestorFinanzasDbContext>(options =>
 //Servicio Email
 builder.Services.AddScoped<EmailService>();
 
+builder.Services.AddAuthentication("MiCookieAuth")
+    .AddCookie("MiCookieAuth", options =>
+    {
+        options.LoginPath = "/Account/Login";
+    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,12 +36,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
-/*
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-*/
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");

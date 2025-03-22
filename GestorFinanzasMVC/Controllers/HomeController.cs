@@ -15,6 +15,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        ViewBag.NombreUsuario = User.Identity.Name;
         return View();
     }
 
@@ -30,9 +31,10 @@ public class HomeController : Controller
     }
 
     //Para que le envíe datos luego del login
-    public IActionResult Welcome(string email)
+    public IActionResult Welcome()
     {
-        ViewBag.Email = email;
+        ViewBag.NombreUsuario = User.Identity.Name;
         return View();
     }
+
 }

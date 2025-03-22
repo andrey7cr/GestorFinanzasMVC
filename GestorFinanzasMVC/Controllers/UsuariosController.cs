@@ -2,7 +2,11 @@
 using GestorFinanzasMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+
 
 namespace GestorFinanzasMVC.Controllers
 {
@@ -56,15 +60,26 @@ namespace GestorFinanzasMVC.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var usuarioEncontrado = await _context.Usuarios
+            var usuario = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Email == loginData.Email && u.Password == loginData.Password);
 
-            if (usuarioEncontrado == null)
-            {
+            if (usuario == null)
                 return Unauthorized(new { message = "Credenciales inválidas." });
-            }
 
-            return Ok(new { message = "Login exitoso.", usuarioId = usuarioEncontrado.UsuarioId });
+            // Crear claims
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioId.ToString()),
+        new Claim(ClaimTypes.Name, usuario.Nombre),
+        new Claim(ClaimTypes.Email, usuario.Email)
+    };
+
+            var identity = new ClaimsIdentity(claims, "MiCookieAuth");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync("MiCookieAuth", principal);
+
+            return Ok(new { message = "Login con cookie exitoso" });
         }
 
         [HttpPost("RecuperarPassword")]
@@ -132,5 +147,12 @@ namespace GestorFinanzasMVC.Controllers
 
             return Ok(new { message = "Contraseña reseteada con éxito." });
         }
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("MiCookieAuth");
+            return Ok(new { message = "Sesión cerrada." });
+        }
+
     }
 }

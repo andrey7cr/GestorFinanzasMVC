@@ -22,6 +22,8 @@ namespace GestorFinanzasMVC.Models
         public string Password { get; set; }
 
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public ICollection<Ingreso> Ingresos { get; set; }
+        public ICollection<Gasto> Gastos { get; set; }
 
         public string? TokenRecuperacion { get; set; }
         public DateTime? FechaExpiracionToken { get; set; }

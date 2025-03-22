@@ -3,7 +3,21 @@
 }
 
 <div class="container mt-5">
-    <h2>Bienvenido, @ViewBag.Email!</h2>
+    <h2>Bienvenido, @ViewBag.NombreUsuario</h2>
     <p>Has iniciado sesión exitosamente en GestorFinanzasMVC.</p>
     <p>Aquí podrás gestionar tus finanzas y ver tus reportes.</p>
+    <a href="/Finanzas/Registrar">Registrar Ingreso</a> |
+    <a href="/Finanzas/Registrar">Registrar Gasto</a>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+
+    <script>
+        function cerrarSesion() {
+            fetch('/api/Usuarios/Logout', {
+                method: 'POST',
+                credentials: 'include'
+            }).then(() => {
+                window.location.href = '/Account/Login';
+            });
+        }
+    </script>
 </div>
