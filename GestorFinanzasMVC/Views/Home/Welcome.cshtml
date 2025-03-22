@@ -10,6 +10,45 @@
     <a href="/Finanzas/Registrar">Registrar Gasto</a>
     <button onclick="cerrarSesion()">Cerrar sesión</button>
 
+   
+</div>
+
+@{
+    ViewData["Title"] = "Bienvenido";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">¡Bienvenido, @User.Identity.Name!</h2>
+
+    <div class="row justify-content-center g-4">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="mb-3 text-primary">
+                        <i class="bi bi-pencil-square" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="card-title">Registrar Movimiento</h5>
+                    <p class="card-text text-muted">Añade un nuevo ingreso o gasto a tu historial financiero.</p>
+                    <a href="/Finanzas/Registrar" class="btn btn-outline-primary">Ir al formulario</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="mb-3 text-success">
+                        <i class="bi bi-bar-chart-line-fill" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="card-title">Resumen Financiero</h5>
+                    <p class="card-text text-muted">Consulta tus ingresos y gastos en un solo lugar.</p>
+                    <a href="/Finanzas/Resumen" class="btn btn-outline-success">Ver resumen</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <script>
         function cerrarSesion() {
             fetch('/api/Usuarios/Logout', {
