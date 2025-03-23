@@ -29,9 +29,9 @@ namespace GestorFinanzasMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("Modelo no válido"); 
                 return BadRequest(ModelState);
             }
+
 
             if (await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email))
             {
