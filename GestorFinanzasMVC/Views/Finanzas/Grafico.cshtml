@@ -1,26 +1,53 @@
 ﻿@{
     ViewData["Title"] = "Gráfico de Ingresos vs Gastos";
+    var ingresosPorCategoria = ViewBag.IngresosPorCategoria ?? new List<object>();
+    var gastosPorCategoria = ViewBag.GastosPorCategoria ?? new List<object>();
 }
 
 <div class="container py-4">
-    <h2 class="text-center mb-4 text-primary">Resumen Gráfico</h2>
+    <h2 class="text-center mb-4 text-primary">
+        <i class="bi bi-bar-chart-fill"></i> Resumen Gráfico
+    </h2>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mb-4">
         <canvas id="graficoFinanciero" style="max-width: 400px; max-height: 300px;"></canvas>
     </div>
+
+    <div class="row">
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <h5 class="text-danger text-center mb-3">Ingresos por Categoría</h5>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <canvas id="graficoIngresos" style="max-width: 300px;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <h5 class="text-danger text-center mb-3">Gastos por Categoría</h5>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <canvas id="graficoGastos" style="max-width: 300px;"></canvas>
+            </div>
+        </div>
+
+    </div>
 </div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('graficoFinanciero').getContext('2d');
-        const grafico = new Chart(ctx, {
+        const totalIngresos = @ViewBag.TotalIngresos;
+        const totalGastos = @ViewBag.TotalGastos;
+
+        const ingresosPorCategoria = @Html.Raw(ViewBag.IngresosPorCategoriaJson);
+        const gastosPorCategoria = @Html.Raw(ViewBag.GastosPorCategoriaJson);
+
+        const ctxBar = document.getElementById('graficoFinanciero').getContext('2d');
+        new Chart(ctxBar, {
             type: 'bar',
             data: {
                 labels: ['Ingresos', 'Gastos'],
                 datasets: [{
                     label: 'Monto en colones',
-                    data: [@ViewBag.TotalIngresos, @ViewBag.TotalGastos],
+                    data: [totalIngresos, totalGastos],
                     backgroundColor: ['#198754', '#dc3545'],
                     borderRadius: 10
                 }]
@@ -31,17 +58,41 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            stepSize: 5000 // ajustable
-                        }
+                        ticks: { stepSize: 5000 }
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
+                plugins: { legend: { display: false } }
             }
         });
+
+        // Pie de ingresos por categoría
+        const ctxPieIngresos = document.getElementById('graficoIngresos').getContext('2d');
+        new Chart(ctxPieIngresos, {
+            type: 'pie',
+            data: {
+                labels: ingresosPorCategoria.map(i => i.Categoria),
+                datasets: [{
+                    data: ingresosPorCategoria.map(i => i.Total),
+                    backgroundColor: ['#28a745', '#50c878', '#90ee90', '#c0ffc0']
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Pie de gastos por categoría
+        const ctxPieGastos = document.getElementById('graficoGastos').getContext('2d');
+        new Chart(ctxPieGastos, {
+            type: 'pie',
+            data: {
+                labels: gastosPorCategoria.map(g => g.Categoria),
+                datasets: [{
+                    data: gastosPorCategoria.map(g => g.Total),
+                    backgroundColor: ['#dc3545', '#ff6b6b', '#ff9999', '#ffd6d6']
+                }]
+            },
+            options: { responsive: true }
+        });
     </script>
+}
+
 }

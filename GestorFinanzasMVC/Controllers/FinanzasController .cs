@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using GestorFinanzasMVC.Models;
+using System.Text.Json;
 
 namespace GestorFinanzasMVC.Controllers
 {
@@ -43,7 +44,6 @@ namespace GestorFinanzasMVC.Controllers
                 .ToListAsync();
 
             return View("Resumen", ((IEnumerable<Ingreso>)ingresos, (IEnumerable<Gasto>)gastos));
-
         }
 
         [Authorize]
@@ -53,17 +53,39 @@ namespace GestorFinanzasMVC.Controllers
 
             var ingresos = await _context.Ingresos
                 .Where(i => i.UsuarioId == usuarioId)
-                .SumAsync(i => i.Monto);
+                .ToListAsync();
 
             var gastos = await _context.Gastos
                 .Where(g => g.UsuarioId == usuarioId)
-                .SumAsync(g => g.Monto);
+                .ToListAsync();
 
-            ViewBag.TotalIngresos = ingresos;
-            ViewBag.TotalGastos = gastos;
+            var ingresosPorCategoria = await _context.Ingresos
+                .Where(i => i.UsuarioId == usuarioId)
+                .Include(i => i.Categoria)
+                .GroupBy(i => i.Categoria.Nombre)
+                .Select(g => new { Categoria = g.Key, Total = g.Sum(i => i.Monto) })
+                .ToListAsync();
+
+            var gastosPorCategoria = await _context.Gastos
+                .Where(g => g.UsuarioId == usuarioId)
+                .Include(g => g.Categoria)
+                .GroupBy(g => g.Categoria.Nombre)
+                .Select(g => new { Categoria = g.Key, Total = g.Sum(g => g.Monto) })
+                .ToListAsync();
+
+
+            ViewBag.TotalIngresos = ingresos.Sum(i => i.Monto);
+            ViewBag.TotalGastos = gastos.Sum(g => g.Monto);
+            ViewBag.IngresosPorCategoriaJson = JsonSerializer.Serialize(ingresosPorCategoria);
+            ViewBag.GastosPorCategoriaJson = JsonSerializer.Serialize(gastosPorCategoria);
+
+            Console.WriteLine("Ingresos por categoría:");
+            foreach (var i in ingresosPorCategoria)
+            {
+                Console.WriteLine($"{i.Categoria}: {i.Total}");
+            }
 
             return View();
         }
-
     }
 }
