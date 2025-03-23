@@ -1,5 +1,16 @@
-﻿@{
+﻿@model WelcomeVm
+
+@{
     ViewData["Title"] = "Bienvenido";
+}
+
+@if (Model.TotalGastos > Model.TotalIngresos)
+{
+    <div class="alert alert-danger mt-4 d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-3 me-2"></i>
+        <strong>¡Atención!</strong> Tus gastos (₡ @Model.TotalGastos) superan tus ingresos (₡ @Model.TotalIngresos).
+        Tienes un desbalance de <strong> ₡ @(Model.TotalGastos - Model.TotalIngresos)</strong>.
+    </div>
 }
 
 <div class="container py-5">
