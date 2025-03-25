@@ -1,0 +1,37 @@
+﻿@model MetaFinanciera
+@{
+    ViewData["Title"] = "Agregar Meta Financiera";
+}
+
+<div class="container mt-4">
+    <h2>Agregar Nueva Meta</h2>
+    <form asp-action="Crear" method="post">
+        <div class="mb-3">
+            <label asp-for="CategoriaId" class="form-label">Categoría</label>
+            <select asp-for="CategoriaId" class="form-select" 
+            asp-items="@(new SelectList(ViewBag.Categorias, "CategoriaId", "Nombre"))">
+                <option value="">-- Selecciona una categoría --</option>
+            </select>
+            <span asp-validation-for="CategoriaId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MontoObjetivo" class="form-label">Monto Objetivo</label>
+            <input asp-for="MontoObjetivo" class="form-control" />
+            <span asp-validation-for="MontoObjetivo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Tipo" class="form-label">Tipo de Meta</label>
+            <select asp-for="Tipo" class="form-select">
+                <option value="0">Ingreso</option>
+                <option value="1">Gasto</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a asp-action="Listar" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

@@ -13,6 +13,20 @@
     </div>
 }
 
+@if (Model.MetasAlcanzadas != null && Model.MetasAlcanzadas.Any())
+{
+    foreach (var meta in Model.MetasAlcanzadas)
+    {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            🎯 ¡Has alcanzado tu meta de <strong>@meta.Tipo</strong> en la categoría
+            <strong>@meta.Categoria?.Nombre</strong> por ₡@meta.MontoObjetivo.ToString("N0")!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+
+
 <div class="container py-5">
     <h2 class="text-center mb-5">¡Bienvenido, @User.Identity.Name!</h2>
 
@@ -69,6 +83,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="mb-3 text-primary">
+                        <i class="bi bi-currency-exchange" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="card-title">Metas Financieras</h5>
+                    <p class="card-text">Revisa tus metas y gestiona tu progreso.</p>
+                    <a href="/Metas/Listar" class="btn btn-outline-primary">Ver metas</a>
+                </div>
+            </div>
+        </div>
+
 
         <div class="col-md-6 col-lg-4">
             <div class="card shadow-sm h-100 border-0">

@@ -1,0 +1,58 @@
+﻿@if (TempData["MetaAlcanzada"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        @TempData["MetaAlcanzada"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@* Vista para LISTAR metas financieras *@
+@model IEnumerable<MetaFinanciera>
+
+@{
+    ViewData["Title"] = "Metas Financieras";
+}
+
+<div class="container mt-4">
+    <h2>Metas Financieras</h2>
+    <a asp-action="Crear" class="btn btn-success mb-3">Agregar Nueva Meta</a>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Monto Objetivo</th>
+                <th>Tipo</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var meta in Model)
+            {
+                <tr>
+                    <td>@meta.Categoria.Nombre</td>
+                    <td>@meta.MontoObjetivo.ToString("C")</td>
+                    <td>@meta.Tipo</td>
+                    <td>@meta.FechaRegistro.ToShortDateString()</td>
+                    <td>
+                        @if (meta.Alcanzada)
+                        {
+                            <span class="badge bg-success">Alcanzada</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Pendiente</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="Eliminar" asp-route-id="@meta.MetaFinancieraId" method="post" onsubmit="return confirm('Desea eliminar esta meta?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

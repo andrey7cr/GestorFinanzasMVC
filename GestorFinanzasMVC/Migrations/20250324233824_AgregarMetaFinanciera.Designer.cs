@@ -4,6 +4,7 @@ using GestorFinanzasMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestorFinanzasMVC.Migrations
 {
     [DbContext(typeof(GestorFinanzasDbContext))]
-    partial class GestorFinanzasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324233824_AgregarMetaFinanciera")]
+    partial class AgregarMetaFinanciera
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,41 +148,6 @@ namespace GestorFinanzasMVC.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("MetaFinanciera", b =>
-                {
-                    b.Property<int>("MetaFinancieraId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MetaFinancieraId"));
-
-                    b.Property<bool>("Alcanzada")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("MontoObjetivo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MetaFinancieraId");
-
-                    b.HasIndex("CategoriaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("MetasFinancieras");
-                });
-
             modelBuilder.Entity("GestorFinanzasMVC.Models.Gasto", b =>
                 {
                     b.HasOne("GestorFinanzasMVC.Models.Categoria", "Categoria")
@@ -210,25 +178,6 @@ namespace GestorFinanzasMVC.Migrations
                     b.HasOne("GestorFinanzasMVC.Models.Usuario", "Usuario")
                         .WithMany("Ingresos")
                         .HasForeignKey("UsuarioId");
-
-                    b.Navigation("Categoria");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("MetaFinanciera", b =>
-                {
-                    b.HasOne("GestorFinanzasMVC.Models.Categoria", "Categoria")
-                        .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GestorFinanzasMVC.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Categoria");
 

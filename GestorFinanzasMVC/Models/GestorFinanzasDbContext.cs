@@ -12,6 +12,9 @@ namespace GestorFinanzasMVC.Models
         public DbSet<Ingreso> Ingresos { get; set; }
         public DbSet<Gasto> Gastos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<MetaFinanciera> MetasFinancieras { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

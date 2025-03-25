@@ -1,80 +1,44 @@
-﻿@{
-	ViewData["Title"] = "Crear Categoría";
+﻿@model MetaFinanciera
+
+@{
+    ViewData["Title"] = "Agregar Meta Financiera";
 }
 
-<div class="container py-4">
-	<h2 class="text-center mb-4">
-		<i class="bi bi-tags-fill"></i> Crear Categoría
-	</h2>
+<div class="container mt-4">
+    <h2>Agregar Meta Financiera</h2>
 
-	<div class="row justify-content-center">
-		<div class="col-md-6">
-			<div class="card shadow-sm border-0">
-				<div class="card-body">
-					<form id="categoriaForm">
-						<div class="mb-3">
-							<label for="Nombre" class="form-label">Nombre de la categoría</label>
-							<input type="text" class="form-control" id="Nombre" name="Nombre" placeholder="Ej. Transporte" required />
-						</div>
-						<div class="d-grid">
-							<button type="submit" class="btn btn-info">
-								<i class="bi bi-plus-circle"></i> Crear
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+    <form asp-action="Crear" method="post" class="mt-3">
+        <div class="mb-3">
+            <label for="CategoriaId" class="form-label">Categoría</label>
+            <select asp-for="CategoriaId" class="form-select" asp-items="@(new SelectList(ViewBag.Categorias, "CategoriaId", "Nombre"))">
+                <option value="">-- Selecciona una categoría --</option>
+            </select>
+            <span asp-validation-for="CategoriaId" class="text-danger"></span>
+        </div>
 
-<!-- Toast de confirmación -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-	<div id="toastCategoria" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-		<div class="d-flex">
-			<div class="toast-body" id="toastCategoriaTexto">Categoría creada con éxito.</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
-		</div>
-	</div>
+        <div class="mb-3">
+            <label for="MontoObjetivo" class="form-label">Monto Objetivo</label>
+            <input asp-for="MontoObjetivo" class="form-control" />
+            <span asp-validation-for="MontoObjetivo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Tipo" class="form-label">Tipo</label>
+            <select asp-for="Tipo" class="form-select">
+                <option value="">-- Selecciona un tipo --</option>
+                <option value="Ingreso">Ingreso</option>
+                <option value="Gasto">Gasto</option>
+            </select>
+            <span asp-validation-for="Tipo" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar Meta</button>
+        <a asp-action="Listar" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
 </div>
 
 @section Scripts {
-	<script>
-			   document.getElementById("categoriaForm").addEventListener("submit", async function (e) {
-			e.preventDefault();
-
-			const data = {
-				Nombre: document.getElementById("Nombre").value.trim()
-			};
-
-			if (!data.Nombre) return;
-
-			console.log("JSON enviado:", JSON.stringify(data));
-
-			const response = await fetch('/api/Categorias', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
-				body: JSON.stringify(data)
-			});
-
-			if (!response.ok) {
-				const errorJson = await response.json();
-				console.error("Error al crear categoría:", errorJson);
-				alert(errorJson.mensaje + "\n" + errorJson.errores?.join("\n"));
-			}
-
-			if (response.ok) {
-				const toast = new bootstrap.Toast(document.getElementById("toastCategoria"), { delay: 2000 });
-				document.getElementById("toastCategoriaTexto").textContent = "Categoría creada con éxito";
-				toast.show();
-
-				// Redirigir o limpiar
-				setTimeout(() => window.location.href = "/Home/Welcome", 1500);
-			} else {
-				alert("Error al crear la categoría");
-			}
-		});
-
-	</script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

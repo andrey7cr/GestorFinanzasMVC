@@ -5,5 +5,6 @@
         public string NombreUsuario { get; set; }
         public decimal TotalIngresos { get; set; }
         public decimal TotalGastos { get; set; }
+        public List<MetaFinanciera> MetasAlcanzadas { get; set; }
     }
 }
