@@ -17,7 +17,7 @@
             <ul class="list-group list-group-flush">
                 @foreach (var categoria in Model)
                 {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="categoria-@categoria.CategoriaId">
                         <span>@categoria.Nombre</span>
                         <button class="btn btn-sm btn-outline-danger" onclick="eliminarCategoria(@categoria.CategoriaId)">
                             <i class="bi bi-trash"></i> Eliminar
@@ -41,7 +41,7 @@
 
 @section Scripts {
     <script>
-        async function eliminarCategoria(id) {
+               async function eliminarCategoria(id) {
             if (!confirm("¿Estás seguro de eliminar esta categoría?")) return;
 
             const response = await fetch(`/api/Categorias/${id}`, {
@@ -54,10 +54,14 @@
                 const toast = new bootstrap.Toast(document.getElementById("toastCategoria"), { delay: 2000 });
                 toast.show();
 
-                setTimeout(() => location.reload(), 2200);
+                const item = document.getElementById(`categoria-${id}`);
+                if (item) item.remove();
+
             } else {
-                alert("Error al eliminar la categoría.");
+                const data = await response.json();
+                alert(data.message || "Error al eliminar la categoría.");
             }
         }
+
     </script>
 }
