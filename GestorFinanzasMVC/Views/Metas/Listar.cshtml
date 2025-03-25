@@ -1,58 +1,94 @@
-﻿@if (TempData["MetaAlcanzada"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        @TempData["MetaAlcanzada"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@* Vista para LISTAR metas financieras *@
-@model IEnumerable<MetaFinanciera>
-
+﻿@model IEnumerable<MetaFinanciera>
 @{
     ViewData["Title"] = "Metas Financieras";
 }
 
-<div class="container mt-4">
-    <h2>Metas Financieras</h2>
-    <a asp-action="Crear" class="btn btn-success mb-3">Agregar Nueva Meta</a>
+<h2 class="mt-4">Metas Financieras</h2>
+<a asp-action="Crear" class="btn btn-success mb-3">Agregar Nueva Meta</a>
 
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Categoría</th>
-                <th>Monto Objetivo</th>
-                <th>Tipo</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+<form id="tokenForm" method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Categoría</th>
+            <th>Monto Objetivo</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var meta in Model)
+        {
+            <tr id="meta-@meta.MetaFinancieraId">
+                <td>@meta.Categoria.Nombre</td>
+                <td>₡ @meta.MontoObjetivo</td>
+                <td>@meta.Tipo</td>
+                <td>@meta.FechaRegistro.ToShortDateString()</td>
+                <td>
+                    @if (meta.Alcanzada)
+                    {
+                        <span class="badge bg-success">Alcanzada</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Pendiente</span>
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarMeta(@meta.MetaFinancieraId)">
+                        Eliminar
+                    </button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var meta in Model)
-            {
-                <tr>
-                    <td>@meta.Categoria.Nombre</td>
-                    <td>@meta.MontoObjetivo.ToString("C")</td>
-                    <td>@meta.Tipo</td>
-                    <td>@meta.FechaRegistro.ToShortDateString()</td>
-                    <td>
-                        @if (meta.Alcanzada)
-                        {
-                            <span class="badge bg-success">Alcanzada</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-secondary">Pendiente</span>
-                        }
-                    </td>
-                    <td>
-                        <form asp-action="Eliminar" asp-route-id="@meta.MetaFinancieraId" method="post" onsubmit="return confirm('Desea eliminar esta meta?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+    <div id="toastMeta" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMetaTexto">Meta eliminada.</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        async function eliminarMeta(id) {
+            if (!confirm("¿Desea eliminar esta meta?")) return;
+
+            const token = document.querySelector('#tokenForm input[name="__RequestVerificationToken"]').value;
+
+            const res = await fetch(`/MetasFinancieras/Eliminar/${id}`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                credentials: 'include'
+            });
+
+            if (res.ok) {
+                document.getElementById(`meta-${id}`).remove();
+                mostrarToast("Meta eliminada con éxito.");
+            } else {
+                mostrarToast("Error al eliminar la meta.", true);
+            }
+        }
+
+        function mostrarToast(mensaje, error = false) {
+            const toast = document.getElementById("toastMeta");
+            const toastTexto = document.getElementById("toastMetaTexto");
+            toastTexto.textContent = mensaje;
+            toast.classList.remove("bg-success", "bg-danger");
+            toast.classList.add(error ? "bg-danger" : "bg-success");
+
+            new bootstrap.Toast(toast, { delay: 2000 }).show();
+        }
+    </script>
+}

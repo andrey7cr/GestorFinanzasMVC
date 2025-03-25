@@ -68,15 +68,22 @@ namespace GestorFinanzasMVC.Controllers
         }
 
         [HttpPost]
+        [Route("MetasFinancieras/Eliminar/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Eliminar(int id)
         {
             var meta = await _context.MetasFinancieras.FindAsync(id);
-            if (meta != null)
+            if (meta == null)
             {
-                _context.MetasFinancieras.Remove(meta);
-                await _context.SaveChangesAsync();
+                return NotFound(new { message = "Meta no encontrada" });
             }
-            return RedirectToAction("Listar");
+
+            _context.MetasFinancieras.Remove(meta);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Meta eliminada con éxito" });
         }
+
+
     }
 }
